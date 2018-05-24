@@ -25,3 +25,10 @@ img.banner {
   margin: auto;
   width: 98%;
 }
+.links {
+  margin: 10px 0;
+}
+.links img {
+  display: block;
+  margin: 10px auto;
+}
