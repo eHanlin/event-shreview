@@ -7,6 +7,27 @@ var path = require('path');
 var Q = require('q');
 var util = require('gulp-template-util');
 var less = require('less');
+var Storage = require('@google-cloud/storage');
+var gcs = new Storage({ projectId: "tutor-204108" })
+
+function uploadGCS(eventName) {
+    return es.map(function(file, cb) {
+        fs.stat(file.path, function(err, stats) {
+            if (stats.isFile()) {
+                gcs.bucket("tutor-events")
+                    .upload(file.path, {
+                        destination: `/event/${eventName}/${file.relative}`,
+                        public: true
+                    })
+                    .catch(err => {
+                        console.error('ERROR:', err);
+                    });
+            }
+
+            cb(null, file)
+        })
+    });
+}
 
 function buildStyle() {
     return es.map(function(file, cb) {
@@ -87,5 +108,10 @@ gulp.task('package', function() {
     });
 
     return deferred.promise;
+});
+
+gulp.task("uploadGCS", function() {
+    return gulp.src(["dist/**/*"], {base: "dist"})
+            .pipe(uploadGCS("shreview"));
 });
 

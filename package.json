@@ -8,16 +8,17 @@
     "url": "https://github.com/eHanlin/event-shreview.git"
   },
   "devDependencies": {
+    "@google-cloud/storage": "^1.7.0",
+    "browserify": "14.4.0",
+    "coffeeify": "2.1.0",
+    "del": "2.2.2",
+    "event-stream": "3.3.4",
     "gulp": "3.9.1",
     "gulp-rename": "1.2.2",
     "gulp-template-util": "0.0.2",
-    "event-stream": "3.3.4",
-    "del": "2.2.2",
-    "q": "1.5.0",
+    "less": "2.7.2",
     "path": "0.12.7",
-    "browserify": "14.4.0",
-    "coffeeify": "2.1.0",
-    "less": "2.7.2"
+    "q": "1.5.0"
   },
   "scripts": {
     "test": "echo website"
