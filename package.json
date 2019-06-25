@@ -22,5 +22,8 @@
   },
   "scripts": {
     "test": "echo website"
+  },
+  "dependencies": {
+    "gulp-gcloud-publish": "^2.1.1"
   }
 }
