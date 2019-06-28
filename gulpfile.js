@@ -124,7 +124,7 @@ gulp.task("package", function() {
     Q.fcall(function() {
         return util.logPromise(cleanTask);
     }).then(function() {
-        return Q.all([util.logStream(libTask("dist/lib")), util.logStream(copyStaticTask("dist")), util.logStream(styleTask("dist/css"))]);
+        return Q.all([util.logStream(copyStaticTask("dist")), util.logStream(styleTask("dist/css"))]);
     });
 
     return deferred.promise;
