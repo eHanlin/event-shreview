@@ -1,45 +1,24 @@
-var gulp = require("gulp");
-var rename = require("gulp-rename");
-var fs = require("fs");
-var es = require("event-stream");
-var del = require("del");
-// var path = require("path");
 var Q = require("q");
-var util = require("gulp-template-util");
+var fs = require("fs");
+var del = require("del");
+var gulp = require("gulp");
 var less = require("less");
-// var Storage = require("@google-cloud/storage");
-// var gcs = new Storage({ projectId: "./tutor.json" });
-
+var es = require("event-stream");
+var rename = require("gulp-rename");
+var util = require("gulp-template-util");
 const gcPub = require("gulp-gcloud-publish");
 
-const bucketNameForTest = "tutor-events-test";
+const bucketNameForTest = "tutor-test-events";
 const bucketNameForProd = "tutor-events";
 const projectId = "tutor-204108";
-const keyFileName = "./tutor.json";
+const projectIdTest = "tutor-test-238709";
+const keyFileName = "tutor.json";
+const keyFileNameTest = "tutor-test.json";
 const projectName = "event/shreview/";
 
-// function uploadGCS(eventName) {
-//     return es.map(function(file, cb) {
-//         fs.stat(file.path, function(err, stats) {
-//             if (stats.isFile()) {
-//                 gcs.bucket("tutor-events")
-//                     .upload(file.path, {
-//                         destination: `/event/${eventName}/${file.relative}`,
-//                         public: true
-//                     })
-//                     .catch(err => {
-//                         console.error('ERROR:', err);
-//                     });
-//             }
-
-//             cb(null, file)
-//         })
-//     });
-// }
-
-let uploadGCS = bucketName => {
+let uploadGCSProd = bucketName => {
     return gulp
-        .src(["dist/*.html", "dist/css/**", "dist/img/**"], {
+        .src(["dist/*.html", "dist/img/**", "dist/css/**"], {
             base: `${__dirname}/dist/`
         })
         .pipe(
@@ -50,7 +29,26 @@ let uploadGCS = bucketName => {
                 projectId: projectId,
                 public: true,
                 metadata: {
-                    cacheControl: "no-store"
+                    cacheControl: "no-store, no-transform"
+                }
+            })
+        );
+};
+
+let uploadGCSTest = bucketName => {
+    return gulp
+        .src(["dist/*.html", "dist/img/**", "dist/css/**"], {
+            base: `${__dirname}/dist/`
+        })
+        .pipe(
+            gcPub({
+                bucket: bucketName,
+                keyFilename: keyFileNameTest,
+                base: projectName,
+                projectId: projectIdTest,
+                public: true,
+                metadata: {
+                    cacheControl: "no-store, no-transform"
                 }
             })
         );
@@ -130,9 +128,5 @@ gulp.task("package", function() {
     return deferred.promise;
 });
 
-// gulp.task("uploadGCS", function() {
-//     return gulp.src(["dist/**/*"], { base: "dist" }).pipe(uploadGCS("shreview"));
-// });
-
-gulp.task("uploadGcpTest", uploadGCS.bind(uploadGCS, bucketNameForTest));
-gulp.task("uploadGcpProd", uploadGCS.bind(uploadGCS, bucketNameForProd));
+gulp.task("uploadGcsTest", uploadGCSTest.bind(uploadGCSTest, bucketNameForTest));
+gulp.task("uploadGcsProd", uploadGCSProd.bind(uploadGCSProd, bucketNameForProd));
